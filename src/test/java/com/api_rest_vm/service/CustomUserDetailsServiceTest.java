@@ -45,8 +45,6 @@ public class CustomUserDetailsServiceTest {
         assertEquals(user.getPassword(), userDetails.getPassword());
         assertTrue(userDetails.getAuthorities().stream()
                 .anyMatch(auth -> auth.getAuthority().equals(user.getRole().name())));
-
-        // Verificar se a interação com o repositório ocorreu corretamente
         verify(userRepository, times(1)).findByEmail(user.getEmail());
     }
 
@@ -61,8 +59,6 @@ public class CustomUserDetailsServiceTest {
         });
 
         assertEquals("User not found with e-mail: " + user.getEmail(), exception.getMessage());
-
-        // Verificar se a interação com o repositório ocorreu corretamente
         verify(userRepository, times(1)).findByEmail(user.getEmail());
     }
 }

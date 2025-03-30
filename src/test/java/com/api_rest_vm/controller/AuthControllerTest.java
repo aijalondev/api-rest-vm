@@ -32,6 +32,10 @@ class AuthControllerTest {
         authResponse = new AuthResponse("tokenMock");
     }
 
+    // Testa o comportamento do método `login` quando as credenciais fornecidas pelo
+    // usuário são corretas
+    // Verifica se o controlador de autenticação retorna uma resposta de
+    // autenticação (AuthResponse) com sucesso.
     @Test
     void login_whenCredentialsAreCorrect_returnsAuthResponse() {
         when(authService.authenticate(loginRequest)).thenReturn(authResponse);
@@ -40,10 +44,13 @@ class AuthControllerTest {
 
         assertNotNull(response);
         assertEquals(authResponse, response.getBody());
-
         verify(authService, times(1)).authenticate(loginRequest);
     }
 
+    // Testa o comportamento do método `login` quando as credenciais fornecidas pelo
+    // usuário são incorretas
+    // Verifica se o controlador lança uma AuthenticationException com a mensagem
+    // correta quando o serviço de autenticação falha.
     @Test
     void login_whenCredentialsAreIncorrect_throwsAuthenticationException() {
         when(authService.authenticate(loginRequest))

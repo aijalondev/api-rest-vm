@@ -61,7 +61,8 @@ class UserControllerTest {
         userResponsePage = new PageImpl<>(userResponseList, pageable, userResponseList.size());
     }
 
-    // Testa a busca de um usuário por um ID existente
+    // Verifica se, ao buscar um usuário com um ID existente, o controlador retorna
+    // corretamente os dados do usuário
     @Test
     void findById_existingId_returnsOkWithUser() {
         when(userService.findById(userId)).thenReturn(Optional.of(user));
@@ -73,7 +74,8 @@ class UserControllerTest {
         assertThat(response.getBody().get().getId()).isEqualTo(userId);
     }
 
-    // Testa a busca de um usuário por um ID inexistente
+    // Verifica se, ao buscar um usuário com um ID inexistente, o controlador
+    // retorna uma resposta vazia
     @Test
     void findById_nonExistingId_returnsOkWithEmptyOptional() {
         when(userService.findById(userId)).thenReturn(Optional.empty());
@@ -84,7 +86,8 @@ class UserControllerTest {
         assertThat(response.getBody()).isEmpty();
     }
 
-    // Testa a busca de usuários sem fornecer o parâmetro 'name'
+    // Testa se, ao buscar usuários sem fornecer o nome, o controlador retorna todos
+    // os usuários cadastrados
     @Test
     void searchUsers_noNameParam_returnsOkWithAllUsers() {
         when(userService.findAllUsers(pageable)).thenReturn(userResponsePage);
@@ -97,7 +100,8 @@ class UserControllerTest {
         verify(userService, never()).findUsersByNameContainingIgnoreCase(anyString(), any(Pageable.class));
     }
 
-    // Testa a busca de usuários fornecendo o parâmetro 'name' vazio
+    // Verifica se, ao buscar usuários com um parâmetro 'name' vazio, o controlador
+    // ainda retorna todos os usuários
     @Test
     void searchUsers_withNameParamEmpty_returnsOkWithAllUsers() {
         when(userService.findAllUsers(pageable)).thenReturn(userResponsePage);
@@ -110,7 +114,8 @@ class UserControllerTest {
         verify(userService, never()).findUsersByNameContainingIgnoreCase(anyString(), any(Pageable.class));
     }
 
-    // Testa a busca de usuários fornecendo o parâmetro 'name'
+    // Testa se, ao buscar usuários com um nome específico, o controlador retorna
+    // apenas aqueles que contêm esse nome
     @Test
     void searchUsers_withNameParam_returnsOkWithUsersByName() {
         String name = "User";
@@ -124,7 +129,8 @@ class UserControllerTest {
         verify(userService, times(1)).findUsersByNameContainingIgnoreCase(name, pageable);
     }
 
-    // Testa o registro de um novo usuário com uma requisição válida
+    // Verifica se, ao tentar registrar um novo usuário com uma requisição válida, o
+    // controlador retorna um status de criação com sucesso
     @Test
     void register_validRequest_returnsCreated() {
         ResponseEntity<Void> response = userController.register(registerRequest);
@@ -133,7 +139,8 @@ class UserControllerTest {
         verify(userService, times(1)).register(registerRequest);
     }
 
-    // Testa a atualização de um usuário existente com uma requisição
+    // Verifica se, ao atualizar um usuário existente com uma requisição válida, o
+    // controlador retorna um status de sucesso
     @Test
     void update_validRequest_returnsOk() {
         ResponseEntity<Void> response = userController.update(userId, userRequest);
