@@ -1,4 +1,4 @@
-package com.api_rest_vm.config;
+package com.api_rest_vm.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

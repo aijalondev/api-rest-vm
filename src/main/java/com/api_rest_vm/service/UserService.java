@@ -70,10 +70,10 @@ public class UserService {
         userRepository.save(user);
 
         try {
-            emailService.enviarEmail(registerRequest.email(), "Bem vindo à VM Tecnologia",
+            emailService.sendEmail(registerRequest.email(), "Bem vindo à VM Tecnologia",
                     "Cadastro realizado com sucesso!");
         } catch (Exception e) {
-            throw new InternalServerErrorException("Failed to send register email to user with id: " + user.getId());
+            throw new InternalServerErrorException("Failed to send register email to user");
         }
     }
 
@@ -90,7 +90,7 @@ public class UserService {
             userRepository.save(existingUser);
 
             try {
-                emailService.enviarEmail(userRequest.email(), "Atualização Cadastral",
+                emailService.sendEmail(userRequest.email(), "Atualização Cadastral",
                         "O seus dados foram atualizados com sucesso!");
             } catch (Exception e) {
                 throw new InternalServerErrorException("Failed to send update email to user with id: " + id);
