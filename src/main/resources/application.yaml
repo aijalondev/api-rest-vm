@@ -9,11 +9,11 @@ spring:
     password: vm123456
     driver-class-name: org.postgresql.Driver
   jpa:
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
 # JWT Configuration
 jwt:
-  secret: mySuperSecretKey
-  expirationTime: 86400000  # 1 dia em milissegundos
+  secret: f8ab5529f4c892c0dfcefeed9d165bc0
+  expirationTime: 3600000  # 1 hora em milissegundos
