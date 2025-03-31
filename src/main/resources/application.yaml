@@ -17,3 +17,5 @@ spring:
 jwt:
   secret: f8ab5529f4c892c0dfcefeed9d165bc0
   expirationTime: 3600000  # 1 hora em milissegundos
+cors:
+  allowed-origins: http://localhost:4200
