@@ -30,7 +30,7 @@ A maneira mais fácil e recomendada de rodar esta aplicação é utilizando o Do
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/aijalondev/api-rest-vm.git](https://github.com/aijalondev/api-rest-vm.git)
+    git clone https://github.com/aijalondev/api-rest-vm.git
     cd api-rest-vm
     ```
     **Observação:** Certifique-se de que o Git esteja instalado e configurado corretamente em seu sistema para que o comando `git clone` funcione.
