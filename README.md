@@ -148,4 +148,4 @@ O banco de dados PostgreSQL é configurado para rodar em um container Docker sep
 
 * A decisão final vai depender das necessidades específicas do projeto, do tamanho da equipe e da familiaridade da equipe com cada tecnologia.
 
-* Escolhi o Angular como linguagem pois tenho mais familiaridade e especialmente considerando a tendência da VM Tecnologia em lidar com projetos de grande escala.
+* Escolhi o Angular como linguagem pois tenho mais familiaridade e especialmente considerando a tendência da VM Tecnologia em lidar com projetos de grande escala. Olhe o meu projeto em: [https://github.com/aijalondev/frontend-vm-app](https://github.com/aijalondev/frontend-vm-app)
