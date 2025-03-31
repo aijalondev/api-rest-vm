@@ -29,7 +29,7 @@ class AuthControllerTest {
     @BeforeEach
     void setUp() {
         loginRequest = new LoginRequest("aijalon@vm.com", "passwordMock");
-        authResponse = new AuthResponse("tokenMock");
+        authResponse = new AuthResponse("tokenMock", "USER", 1L);
     }
 
     // Testa o comportamento do método `login` quando as credenciais fornecidas pelo

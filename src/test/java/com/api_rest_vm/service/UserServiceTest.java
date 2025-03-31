@@ -169,6 +169,47 @@ public class UserServiceTest {
         verify(emailService, times(1)).sendEmail(eq(userRequest.email()), anyString(), anyString());
     }
 
+    // Testa se o método update mantém o nome sem alterar quando o campo name está
+    // vazio
+    @Test
+    void update_whenNameIsEmpty_doesNotUpdateName() {
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        UserRequest requestWithEmptyName = new UserRequest("", user.getEmail(), user.getRole().name());
+
+        assertDoesNotThrow(() -> userService.update(userId, requestWithEmptyName));
+
+        verify(validationService, never()).validateNameNotExists(anyString());
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    // Testa se o método update mantém o email sem alterar quando o campo email está
+    // vazio
+    @Test
+    void update_whenEmailIsEmpty_doesNotUpdateEmail() {
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        UserRequest requestWithEmptyEmail = new UserRequest(user.getName(), "", user.getRole().name());
+
+        assertDoesNotThrow(() -> userService.update(userId, requestWithEmptyEmail));
+
+        verify(validationService, never()).validateEmailNotExists(anyString());
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    // Testa se o método update mantém a role sem alterar quando o campo role está
+    // vazio
+    @Test
+    void update_whenRoleIsEmpty_doesNotUpdateRole() {
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        UserRequest requestWithEmptyRole = new UserRequest(user.getName(), user.getEmail(), "");
+
+        assertDoesNotThrow(() -> userService.update(userId, requestWithEmptyRole));
+
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
     // Testa se o método update lança NotFoundException quando o usuário não existe
     @Test
     void update_whenUserDoesNotExist_throwsNotFoundException() {
@@ -231,7 +272,8 @@ public class UserServiceTest {
     void findUserByEmail_whenUserDoesNotExist_shouldThrowNotFoundException() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
 
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.findUserByEmail(user.getEmail()));
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> userService.findUserByEmail(user.getEmail()));
 
         assertEquals("User not found with e-mail: " + user.getEmail(), exception.getMessage());
         verify(userRepository, times(1)).findByEmail(user.getEmail());

@@ -28,6 +28,6 @@ public class AuthenticationService {
             throw new AuthenticationException("Invalid e-mail or password");
         }
 
-        return new AuthResponse(tokenService.generateToken(user));
+        return new AuthResponse(tokenService.generateToken(user), user.getRole().name(), user.getId());
     }
 }

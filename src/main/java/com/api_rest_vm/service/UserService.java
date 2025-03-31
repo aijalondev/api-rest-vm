@@ -20,7 +20,6 @@ import com.api_rest_vm.exception.NotFoundException;
 import com.api_rest_vm.model.Role;
 import com.api_rest_vm.repository.UserRepository;
 
-
 @Service
 public class UserService {
 
@@ -30,7 +29,7 @@ public class UserService {
     @Autowired
     @Lazy
     private PasswordEncoder passwordEncoder;
-    
+
     @Autowired
     private EmailService emailService;
 
@@ -89,12 +88,19 @@ public class UserService {
         if (optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
 
-            validationService.validateEmailNotExists(userRequest.email());
-            validationService.validateNameNotExists(userRequest.name());
+            if (!userRequest.name().isBlank()) {
+                validationService.validateNameNotExists(userRequest.name());
+                existingUser.setName(userRequest.name());
+            }
 
-            existingUser.setName(userRequest.name());
-            existingUser.setEmail(userRequest.email());
-            existingUser.setRole(Role.valueOf(userRequest.role().toUpperCase()));
+            if (!userRequest.email().isBlank()) {
+                validationService.validateEmailNotExists(userRequest.email());
+                existingUser.setEmail(userRequest.email());
+            }
+
+            if (!userRequest.role().isBlank()) {
+                existingUser.setRole(Role.valueOf(userRequest.role().toUpperCase()));
+            }
 
             userRepository.save(existingUser);
 
