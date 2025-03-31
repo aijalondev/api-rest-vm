@@ -82,7 +82,7 @@ O banco de dados PostgreSQL é configurado para rodar em um container Docker sep
   "password": "vm123456"
 }</pre>
       </td>
-      <td>Bearer</td>
+      <td>Nenhum</td>
       <td>Nenhum</td>
     </tr>
     <tr>
