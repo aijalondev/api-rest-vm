@@ -1,13 +1,24 @@
 services:
-  local-postgres-compose:
+  db:
     image: postgres:latest
-    environment:
-      POSTGRES_USER: vm
-      POSTGRES_PASSWORD: "vm123456"
-      POSTGRES_DB: vm_db
     ports:
       - "5430:5432"
+    environment:
+      POSTGRES_USER: vm
+      POSTGRES_PASSWORD: vm123456
+      POSTGRES_DB: vm_db
     volumes:
-      - pg-data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/
+
+  app:
+    build: .
+    ports:
+      - "2803:2803"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/vm_db
+      SPRING_DATASOURCE_USERNAME: vm
+      SPRING_DATASOURCE_PASSWORD: vm123456
 volumes:
-  pg-data:
+  db_data:
