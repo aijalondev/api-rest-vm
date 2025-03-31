@@ -140,3 +140,12 @@ O banco de dados PostgreSQL é configurado para rodar em um container Docker sep
     </tr>
   </tbody>
 </table>
+
+## Possibilidades para frontend
+* **Angular:** seria uma boa escolha se o projeto for grande, complexo, precisa de uma estrutura bem definida desde o início e a equipe tiver experiência ou estiver disposta a investir na curva de aprendizado. Pode levar a um maior acoplamento entre diferentes partes da aplicação, dificultando a substituição ou atualização de componentes isoladamente.
+
+* **Vue:** seria uma boa escolha se o projeto for menor, precisar de uma integração mais fácil com código existente, a equipe precisar de uma curva de aprendizado mais suave ou se a prioridade for um desenvolvimento mais rápido e flexível. A flexibilidade, embora uma vantagem, pode levar a inconsistências arquiteturais em projetos maiores se não houver padrões e diretrizes bem definidos pela equipe.
+
+* A decisão final vai depender das necessidades específicas do projeto, do tamanho da equipe e da familiaridade da equipe com cada tecnologia.
+
+* Escolhi o Angular como linguagem pois tenho mais familiaridade e especialmente considerando a tendência da VM Tecnologia em lidar com projetos de grande escala.
