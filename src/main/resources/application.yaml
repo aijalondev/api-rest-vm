@@ -4,18 +4,17 @@ spring:
   application:
     name: api-rest-vm
   datasource:
-    url: jdbc:postgresql://localhost:5430/vm_db
-    username: vm
-    password: vm123456
+    url: jdbc:postgresql://${SPRING_DATASOURCE_URL:db}:${SPRING_DATASOURCE_PORT:5432}/${SPRING_DATASOURCE_DATABASE:vm_db}
+    username: ${SPRING_DATASOURCE_USERNAME:vm}
+    password: ${SPRING_DATASOURCE_PASSWORD:vm123456}
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-# JWT Configuration
 jwt:
   secret: f8ab5529f4c892c0dfcefeed9d165bc0
-  expirationTime: 3600000  # 1 hora em milissegundos
+  expirationTime: 3600000   # 1 hora em milissegundos
 cors:
-  allowed-origins: http://localhost:4200
+  allowed-origins: http://localhost
