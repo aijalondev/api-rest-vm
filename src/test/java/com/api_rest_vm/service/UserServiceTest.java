@@ -42,6 +42,9 @@ public class UserServiceTest {
     @Mock
     private EmailService emailService;
 
+    @Mock
+    private ValidationService validationService;
+
     private User user;
     private RegisterRequest registerRequest;
     private UserRequest userRequest;
@@ -115,7 +118,7 @@ public class UserServiceTest {
     // sucesso
     @Test
     void register_whenSuccessful_savesUserAndSendsEmail() {
-        when(userRepository.existsByEmail(registerRequest.email())).thenReturn(false);
+        doNothing().when(validationService).validateEmailNotExists(registerRequest.email());
         when(passwordEncoder.encode(registerRequest.password())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
 
@@ -127,7 +130,8 @@ public class UserServiceTest {
     // cadastrado
     @Test
     void register_whenEmailAlreadyExists_throwsBadRequestException() {
-        when(userRepository.existsByEmail(registerRequest.email())).thenReturn(true);
+        doThrow(new BadRequestException("User already registered with email: " + registerRequest.email()))
+                .when(validationService).validateEmailNotExists(registerRequest.email());
 
         BadRequestException exception = assertThrows(BadRequestException.class,
                 () -> userService.register(registerRequest));
@@ -138,7 +142,7 @@ public class UserServiceTest {
     // Testa se o método register lança uma exceção quando o envio de e-mail falha
     @Test
     void register_whenEmailServiceFails_throwsInternalServerErrorException() {
-        when(userRepository.existsByEmail(registerRequest.email())).thenReturn(false);
+        doNothing().when(validationService).validateEmailNotExists(registerRequest.email());
         when(passwordEncoder.encode(registerRequest.password())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(user);
         doThrow(new RuntimeException("Email error")).when(emailService).sendEmail(anyString(), anyString(),
@@ -155,6 +159,9 @@ public class UserServiceTest {
     @Test
     void update_whenUserExists_updatesUserAndSendsEmail() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        doNothing().when(validationService).validateEmailNotExists(registerRequest.email());
+        doNothing().when(validationService).validateNameNotExists(userRequest.name());
 
         assertDoesNotThrow(() -> userService.update(userId, userRequest));
 
@@ -178,6 +185,9 @@ public class UserServiceTest {
     @Test
     void update_whenEmailServiceFails_throwsInternalServerErrorException() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        doNothing().when(validationService).validateEmailNotExists(registerRequest.email());
+        doNothing().when(validationService).validateNameNotExists(userRequest.name());
+
         doThrow(new RuntimeException("Email error")).when(emailService).sendEmail(anyString(), anyString(),
                 anyString());
 
@@ -185,5 +195,45 @@ public class UserServiceTest {
                 () -> userService.update(userId, userRequest));
 
         assertEquals("Failed to send update email to user with id: " + userId, exception.getMessage());
+    }
+
+    @Test
+    void delete_whenUserExists_shouldDeleteUser() {
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        userService.delete(userId);
+
+        verify(userRepository, times(1)).delete(user);
+    }
+
+    @Test
+    void delete_whenUserDoesNotExist_shouldThrowNotFoundException() {
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.delete(userId));
+
+        assertEquals("User not found with id: " + userId, exception.getMessage());
+        verify(userRepository, never()).delete(any());
+    }
+
+    @Test
+    void findUserByEmail_whenUserExists_shouldReturnUser() {
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        User foundUser = userService.findUserByEmail(user.getEmail());
+
+        assertNotNull(foundUser);
+        assertEquals(user.getEmail(), foundUser.getEmail());
+        verify(userRepository, times(1)).findByEmail(user.getEmail());
+    }
+
+    @Test
+    void findUserByEmail_whenUserDoesNotExist_shouldThrowNotFoundException() {
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> userService.findUserByEmail(user.getEmail()));
+
+        assertEquals("User not found with e-mail: " + user.getEmail(), exception.getMessage());
+        verify(userRepository, times(1)).findByEmail(user.getEmail());
     }
 }
