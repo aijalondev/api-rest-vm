@@ -3,6 +3,8 @@ package com.api_rest_vm.service;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,21 +15,27 @@ import com.api_rest_vm.dto.RegisterRequest;
 import com.api_rest_vm.dto.UserRequest;
 import com.api_rest_vm.dto.UserResponse;
 import com.api_rest_vm.entity.User;
-import com.api_rest_vm.exception.BadRequestException;
 import com.api_rest_vm.exception.InternalServerErrorException;
 import com.api_rest_vm.exception.NotFoundException;
 import com.api_rest_vm.model.Role;
 import com.api_rest_vm.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private ValidationService validationService;
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
@@ -58,10 +66,8 @@ public class UserService {
     }
 
     public void register(RegisterRequest registerRequest) {
-        if (userRepository.existsByEmail(registerRequest.email())) {
-            throw new BadRequestException(
-                    "User already registered with email: " + registerRequest.email());
-        }
+
+        validationService.validateEmailNotExists(registerRequest.email());
 
         Role role = Role.valueOf(registerRequest.role().toUpperCase());
 
@@ -83,6 +89,9 @@ public class UserService {
         if (optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
 
+            validationService.validateEmailNotExists(userRequest.email());
+            validationService.validateNameNotExists(userRequest.name());
+
             existingUser.setName(userRequest.name());
             existingUser.setEmail(userRequest.email());
             existingUser.setRole(Role.valueOf(userRequest.role().toUpperCase()));
@@ -98,5 +107,20 @@ public class UserService {
         } else {
             throw new NotFoundException("User not found with id: " + id);
         }
+    }
+
+    public void delete(Long id) {
+        Optional<User> optionalUser = findById(id);
+
+        if (optionalUser.isPresent()) {
+            userRepository.delete(optionalUser.get());
+        } else {
+            throw new NotFoundException("User not found with id: " + id);
+        }
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found with e-mail: " + email));
     }
 }

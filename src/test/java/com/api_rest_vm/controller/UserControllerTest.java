@@ -4,6 +4,8 @@ import com.api_rest_vm.dto.RegisterRequest;
 import com.api_rest_vm.dto.UserRequest;
 import com.api_rest_vm.dto.UserResponse;
 import com.api_rest_vm.entity.User;
+import com.api_rest_vm.exception.BadRequestException;
+import com.api_rest_vm.exception.NotFoundException;
 import com.api_rest_vm.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +22,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -139,6 +144,21 @@ class UserControllerTest {
         verify(userService, times(1)).register(registerRequest);
     }
 
+    // Testa fazer cadastro de um usuário com E-mail já existente, o controlador
+    // deve retornar um status de erro (bad request)
+    @Test
+    void register_existsUserWithEmail_returnsBadRequest() {
+
+        doThrow(new BadRequestException("User not found")).when(userService).register(registerRequest);
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+            userController.register(registerRequest);
+        });
+
+        assertEquals("User not found", exception.getMessage());
+        verify(userService, times(1)).register(registerRequest);
+    }
+
     // Verifica se, ao atualizar um usuário existente com uma requisição válida, o
     // controlador retorna um status de sucesso
     @Test
@@ -147,5 +167,45 @@ class UserControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(userService, times(1)).update(userId, userRequest);
+    }
+
+    // Testa fazer atualização de um usuário com ID inexistente, o controlador
+    // deve retornar um status de erro (não encontrado)
+    @Test
+    void update_nonExistingId_returnsNotFound() {
+
+        doThrow(new BadRequestException("User not found")).when(userService).delete(userId);
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
+            userController.delete(userId);
+        });
+
+        assertEquals("User not found", exception.getMessage());
+        verify(userService, times(1)).delete(userId);
+    }
+
+    // Testa fazer uma exclusão de um usuário com ID existente, o controlador
+    // deve retornar um status de sucesso
+    @Test
+    void delete_existingId_returnsOk() {
+        ResponseEntity<Void> response = userController.delete(userId);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        verify(userService, times(1)).delete(userId);
+    }
+
+    // Testa fazer uma exclusão de um usuário com ID inexistente, o controlador
+    // deve retornar um status de erro (não encontrado)
+    @Test
+    void delete_nonExistingId_returnsNotFound() {
+
+        doThrow(new NotFoundException("User not found")).when(userService).delete(userId);
+
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> {
+            userController.delete(userId);
+        });
+
+        assertEquals("User not found", exception.getMessage());
+        verify(userService, times(1)).delete(userId);
     }
 }

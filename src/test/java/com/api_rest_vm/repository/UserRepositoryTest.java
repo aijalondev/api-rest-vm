@@ -116,4 +116,20 @@ public class UserRepositoryTest {
         assertThat(usersPage1.getTotalPages()).isEqualTo(2);
         assertThat(usersPage1.getContent()).contains(user2);
     }
+
+    // Testa quando alguém tenta usar um nome que já foi utilizado por outro usuário
+    // no sistema.
+    @Test
+    void existsByName_whenNameExists_returnsTrue() {
+        boolean response = userRepository.existsByName(user1.getName());
+        assertThat(response).isTrue();
+    }
+
+    // Testa quando alguém tenta usar um nome que ainda não foi cadastrado no
+    // sistema.
+    @Test
+    void existsByName_whenNameDoesNotExist_returnsFalse() {
+        boolean response = userRepository.existsByName("Nao Existe");
+        assertThat(response).isFalse();
+    }
 }
