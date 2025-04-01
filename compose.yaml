@@ -4,9 +4,9 @@ services:
     ports:
       - "5430:5432"
     environment:
-      POSTGRES_USER: vm
-      POSTGRES_PASSWORD: vm123456
-      POSTGRES_DB: vm_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - db_data:/var/lib/postgresql/
 
@@ -16,9 +16,6 @@ services:
       - "2803:2803"
     depends_on:
       - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/vm_db
-      SPRING_DATASOURCE_USERNAME: vm
-      SPRING_DATASOURCE_PASSWORD: vm123456
+    env_file: .env
 volumes:
   db_data:

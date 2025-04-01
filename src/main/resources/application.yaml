@@ -1,10 +1,11 @@
 server:
-  port: 2803
+  port: ${SERVER_PORT:2803}
+
 spring:
   application:
     name: api-rest-vm
   datasource:
-    url: jdbc:postgresql://${SPRING_DATASOURCE_URL:db}:${SPRING_DATASOURCE_PORT:5432}/${SPRING_DATASOURCE_DATABASE:vm_db}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5432/vm_db}
     username: ${SPRING_DATASOURCE_USERNAME:vm}
     password: ${SPRING_DATASOURCE_PASSWORD:vm123456}
     driver-class-name: org.postgresql.Driver
@@ -13,8 +14,13 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+
 jwt:
-  secret: f8ab5529f4c892c0dfcefeed9d165bc0
-  expirationTime: 3600000   # 1 hora em milissegundos
+  secret: ${JWT_SECRET:f8ab5529f4c892c0dfcefeed9d165bc0}
+  expirationTime: ${JWT_EXPIRATION_TIME:3600000}
+
 cors:
-  allowed-origins: http://localhost
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost}
+  allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
+  allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Content-Type}
+  allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
