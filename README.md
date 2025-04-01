@@ -2,7 +2,7 @@
 
 ![Logo da VM Tecnologia](https://static.wixstatic.com/media/31e6f4_c384784ebd564c69bd34872c89331c55~mv2.png/v1/fill/w_241,h_55,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo%20inteira%201.png)
 
-Este projeto é uma API Rest desenvolvida para testes na VM Tecnologia a Nayax Company.
+Este projeto é uma API Rest desenvolvida para teste na VM Tecnologia a Nayax Company.
 
 ## Visão Geral
 
