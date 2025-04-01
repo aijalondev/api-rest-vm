@@ -45,10 +45,10 @@ A maneira mais fácil e recomendada de rodar esta aplicação é utilizando o Do
     ```bash
     docker-compose up -d
     ```
-    Este comando irá ler o arquivo `docker-compose.yml` (que deve estar na raiz do seu projeto) e iniciar os containers definidos nele, que incluem a API e o banco de dados PostgreSQL. A flag `-d` indica que os containers serão executados em segundo plano (detached mode).
+    Este comando irá ler o arquivo `docker-compose.yml` e iniciar os containers definidos nele, que incluem a API e o banco de dados PostgreSQL. A flag `-d` indica que os containers serão executados em segundo plano (detached mode).
 
 4.  **Acesse a API:**
-    Após a execução dos comandos acima, a API Rest estará disponível na porta configurada no `docker-compose.yml` (geralmente `localhost:2803` ou a porta que você especificou).
+    Após a execução dos comandos acima, a API Rest estará disponível na porta configurada no `docker-compose.yml` (geralmente `localhost:2803` ou a porta que for especificado).
 
 ## Configuração do Banco de Dados
 
