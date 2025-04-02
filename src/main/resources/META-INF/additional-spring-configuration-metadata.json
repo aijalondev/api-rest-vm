@@ -13,5 +13,30 @@
     "name": "cors.allowed-origins",
     "type": "java.lang.String",
     "description": "A description for 'cors.allowed-origins'"
+  },
+  {
+    "name": "cors.allow-credentials",
+    "type": "java.lang.String",
+    "description": "A description for 'cors.allow-credentials'"
+  },
+  {
+    "name": "cors.allowed-headers",
+    "type": "java.lang.String",
+    "description": "A description for 'cors.allowed-headers'"
+  },
+  {
+    "name": "cors.allowed-methods",
+    "type": "java.lang.String",
+    "description": "A description for 'cors.allowed-methods'"
+  },
+  {
+    "name": "app.version",
+    "type": "java.lang.String",
+    "description": "A description for 'server.version'"
+  },
+  {
+    "name": "security.excluded-paths",
+    "type": "java.lang.String",
+    "description": "A description for 'security.excluded-paths'"
   }
 ]}

@@ -5,35 +5,31 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
-
-    private static final Logger logger = LoggerFactory.getLogger(CorsConfig.class);
 
     @Value("${cors.allowed-origins}")
     private String allowedOrigins;
 
+    @Value("${cors.allowed-methods}")
+    private String allowedMethods;
+
+    @Value("${cors.allow-credentials}")
+    private boolean allowCredentials;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        logger.info("Valor de allowedOrigins: {}", allowedOrigins); // Adicione este log
-        String[] origins = allowedOrigins.split(",");
-        logger.info("Origens após split: {}", Arrays.toString(origins)); // Adicione este log
         registry.addMapping("/auth/**")
-                .allowedOrigins(origins)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOrigins(allowedOrigins)
+                .allowedMethods(allowedMethods.split(","))
                 .allowedHeaders("*")
-                .allowCredentials(true)
+                .allowCredentials(allowCredentials)
                 .maxAge(3600);
         registry.addMapping("/user/**")
-                .allowedOrigins(origins)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOrigins(allowedOrigins)
+                .allowedMethods(allowedMethods.split(","))
                 .allowedHeaders("*")
-                .allowCredentials(true)
+                .allowCredentials(allowCredentials)
                 .maxAge(3600);
     }
 }

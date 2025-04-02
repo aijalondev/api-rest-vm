@@ -6,12 +6,14 @@ import com.api_rest_vm.dto.UserResponse;
 import com.api_rest_vm.entity.User;
 import com.api_rest_vm.exception.BadRequestException;
 import com.api_rest_vm.exception.NotFoundException;
+import com.api_rest_vm.model.Role;
 import com.api_rest_vm.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +34,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
     @Mock
@@ -57,8 +59,8 @@ class UserControllerTest {
         user.setName("nameMock");
         user.setEmail("aijalon@vm.com");
 
-        registerRequest = new RegisterRequest("nameMock", "new@vm.com", "password", "USER");
-        userRequest = new UserRequest("nameMock", "updated@vm.com", "ADMIN");
+        registerRequest = new RegisterRequest("nameMock", "new@vm.com", "password", "user");
+        userRequest = new UserRequest("nameMock", "updated@vm.com", "admin");
 
         pageable = Pageable.ofSize(20);
         userResponseList = List.of(new UserResponse(1L, "User 1", "email1", "USER"),
@@ -174,14 +176,14 @@ class UserControllerTest {
     @Test
     void update_nonExistingId_returnsNotFound() {
 
-        doThrow(new BadRequestException("User not found")).when(userService).delete(userId);
+        doThrow(new BadRequestException("User not found")).when(userService).update(userId, userRequest);
 
         BadRequestException exception = assertThrows(BadRequestException.class, () -> {
-            userController.delete(userId);
+            userController.update(userId, userRequest);
         });
 
         assertEquals("User not found", exception.getMessage());
-        verify(userService, times(1)).delete(userId);
+        verify(userService, times(1)).update(userId, userRequest);
     }
 
     // Testa fazer uma exclusão de um usuário com ID existente, o controlador
