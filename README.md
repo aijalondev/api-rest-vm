@@ -52,94 +52,31 @@ A maneira mais fácil e recomendada de rodar esta aplicação é utilizando o Do
 
 ## Configuração do Banco de Dados
 
-O banco de dados PostgreSQL é configurado para rodar em um container Docker separado, definido no arquivo `docker-compose.yml`. As configurações do banco de dados (nome, usuário, senha) são definidas nas variáveis de ambiente dentro desse arquivo.
+O banco de dados PostgreSQL é configurado para rodar em um container Docker separado, definido no arquivo `docker-compose.yml`. As configurações do banco de dados (nome, usuário, senha) são definidas nas variáveis de ambiente dentro do arquivo `.env`.
 
 **Importante:** Certifique-se de que as configurações do banco de dados no seu arquivo `docker-compose.yml` correspondam às configurações de conexão definidas na sua aplicação Spring Boot (geralmente no arquivo `application.yml` ou `application.properties`).
 
+## Manipulação do Banco de Dados
+
+Para facilitar a administração do PostgreSQL, há um container com o pgAdmin disponível.
+
+Para acessar o pgAdmin, siga os passos:
+
+Abra um navegador e acesse `http://localhost:5431`
+
+Use as credenciais definidas no `docker-compose.yml` para login
+
+Configure a conexão com o PostgreSQL utilizando as credenciais do banco
+
 ## Endpoints da API
 
-**Observação:** Para realizar testes nos endpoints abaixo, o banco de dados deve estar populado com alguns usuários. O arquivo `init_users.sql` presente no projeto contém um script SQL com uma base de usuários para este propósito. Certifique-se de executar este script no banco de dados após a inicialização dos containers Docker.
+**Observação:** Para realizar testes nos endpoints abaixo, o banco de dados deve estar populado com alguns usuários. O arquivo `init_users.sql` presente na raiz do projeto contém um script SQL com uma base de usuários para este propósito. Certifique-se de executar este script no banco de dados após a inicialização dos containers Docker.
 
-<table>
-  <thead>
-    <tr>
-      <th>Endpoint</th>
-      <th>Método</th>
-      <th>URL</th>
-      <th>Dados do Body (Request)</th>
-      <th>Autenticação</th>
-      <th>Parâmetros de Query</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Login</td>
-      <td>POST</td>
-      <td><code>localhost:2803/auth/login</code></td>
-      <td>
-        <pre>{
-  "email": "vinicius.souza@vm.com",
-  "password": "vm123456"
-}</pre>
-      </td>
-      <td>Nenhum</td>
-      <td>Nenhum</td>
-    </tr>
-    <tr>
-      <td>Register</td>
-      <td>POST</td>
-      <td><code>localhost:2803/user/register</code></td>
-      <td>
-        <pre>{
-  "name": "Aijalon",
-  "email": "aijalon@vm.com",
-  "password": "vm123456",
-  "role": "user"
-}</pre>
-      </td>
-      <td>Nenhum</td>
-      <td>Nenhum</td>
-    </tr>
-    <tr>
-      <td>Find User By Id</td>
-      <td>GET</td>
-      <td><code>localhost:2803/user/1</code></td>
-      <td>Nenhum</td>
-      <td>Bearer</td>
-      <td>Nenhum</td>
-    </tr>
-    <tr>
-      <td>Search Users</td>
-      <td>GET</td>
-      <td><code>localhost:2803/user</code></td>
-      <td>Nenhum</td>
-      <td>Bearer</td>
-      <td><code>name</code>: "bru", <code>page</code>: 1, <code>size</code>: 10</td>
-    </tr>
-    <tr>
-      <td>Update user</td>
-      <td>PUT</td>
-      <td><code>localhost:2803/user/47</code></td>
-      <td>
-        <pre>{
-  "name": "",
-  "email": "",
-  "role": "Admin"
-}</pre>
-      </td>
-      <td>Bearer</td>
-      <td>Nenhum</td>
-    </tr>
-    <tr>
-      <td>Delete User By Id</td>
-      <td>DELETE</td>
-      <td><code>localhost:2803/user/1</code></td>
-      <td>Nenhum</td>
-      <td>Bearer</td>
-      <td>Nenhum</td>
-    </tr>
-  </tbody>
-</table>
+Para acessar a documentação completa da API, acesse o link abaixo:
+
+[http://localhost:2803/doc/api-rest-vm](http://localhost:2803/doc/api-rest-vm).
+
+A documentação fornece detalhes sobre os endpoints disponíveis, métodos suportados, parâmetros e exemplos de requisição/resposta.
 
 ## Possibilidades para frontend
 * **Angular:** seria uma boa escolha se o projeto for grande, complexo, precisa de uma estrutura bem definida desde o início e a equipe tiver experiência ou estiver disposta a investir na curva de aprendizado. Pode levar a um maior acoplamento entre diferentes partes da aplicação, dificultando a substituição ou atualização de componentes isoladamente.
