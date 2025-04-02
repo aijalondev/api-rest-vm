@@ -1,13 +1,15 @@
 package com.api_rest_vm.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.api_rest_vm.dto.AuthResponse;
@@ -17,7 +19,7 @@ import com.api_rest_vm.exception.AuthenticationException;
 import com.api_rest_vm.exception.NotFoundException;
 import com.api_rest_vm.model.Role;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
 
     @Mock
@@ -40,7 +42,7 @@ class AuthenticationServiceTest {
         
         Role role = Role.USER;
         
-        user = new User(1L, "Aijalon Honasc", "aijalon@vm", "passwordMock", role);
+        user = new User(1L, "Aijalon Honasc", "aijalon@vm", "hashedPassword", role);
 
         loginRequest = new LoginRequest("aijalon@vm", "passwordMock");
     }
@@ -51,7 +53,7 @@ class AuthenticationServiceTest {
     void authenticate_whenCredentialsAreValid_returnsAuthResponse() {
         when(userService.findUserByEmail(loginRequest.email())).thenReturn(user);
         when(tokenService.generateToken(user)).thenReturn("tokenMock");
-        when(passwordEncoder.matches(loginRequest.password(), user.getPassword())).thenReturn(true);
+        when(passwordEncoder.matches(eq(loginRequest.password()), eq(user.getPassword()))).thenReturn(true);
 
         AuthResponse response = authenticationService.authenticate(loginRequest);
 
@@ -75,7 +77,7 @@ class AuthenticationServiceTest {
     @Test
     void authenticate_whenPasswordIsIncorrect_throwsAuthenticationException() {
         when(userService.findUserByEmail(loginRequest.email())).thenReturn(user);
-        when(passwordEncoder.matches("wrongPassword", user.getPassword())).thenReturn(false);
+        when(passwordEncoder.matches(eq("wrongPassword"), eq(user.getPassword()))).thenReturn(false);
 
         // Simula senha incorreta
         LoginRequest wrongPasswordRequest = new LoginRequest("aijalon@vm", "wrongPassword");

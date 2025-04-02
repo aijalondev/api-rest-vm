@@ -11,9 +11,10 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 
 import com.api_rest_vm.dto.RegisterRequest;
@@ -27,7 +28,7 @@ import com.api_rest_vm.model.Role;
 import com.api_rest_vm.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     @InjectMocks
@@ -57,9 +58,9 @@ public class UserServiceTest {
 
         user = new User(userId, "Aijalon Honasc", "aijalon@vm.com", "passwordMock", Role.USER);
 
-        registerRequest = new RegisterRequest("Aijalon Honasc", "aijalon@vm.com", "passwordMock", "USER");
+        registerRequest = new RegisterRequest("Aijalon Honasc", "aijalon@vm.com", "passwordMock", "user");
 
-        userRequest = new UserRequest("Updated Aijalon Honasc", "aijalon_updated@vm.com", "ADMIN");
+        userRequest = new UserRequest("Updated Aijalon Honasc", "aijalon_updated@vm.com", "admin");
 
         pageable = PageRequest.of(0, 20, Sort.by("name"));
 
@@ -160,7 +161,7 @@ public class UserServiceTest {
     void update_whenUserExists_updatesUserAndSendsEmail() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        doNothing().when(validationService).validateEmailNotExists(registerRequest.email());
+        doNothing().when(validationService).validateEmailNotExists(userRequest.email());
         doNothing().when(validationService).validateNameNotExists(userRequest.name());
 
         assertDoesNotThrow(() -> userService.update(userId, userRequest));
@@ -175,7 +176,7 @@ public class UserServiceTest {
     void update_whenNameIsEmpty_doesNotUpdateName() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        UserRequest requestWithEmptyName = new UserRequest("", user.getEmail(), user.getRole().name());
+        UserRequest requestWithEmptyName = new UserRequest("", user.getEmail(), "user");
 
         assertDoesNotThrow(() -> userService.update(userId, requestWithEmptyName));
 
@@ -189,7 +190,7 @@ public class UserServiceTest {
     void update_whenEmailIsEmpty_doesNotUpdateEmail() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        UserRequest requestWithEmptyEmail = new UserRequest(user.getName(), "", user.getRole().name());
+        UserRequest requestWithEmptyEmail = new UserRequest(user.getName(), "", "user");
 
         assertDoesNotThrow(() -> userService.update(userId, requestWithEmptyEmail));
 
@@ -226,7 +227,7 @@ public class UserServiceTest {
     @Test
     void update_whenEmailServiceFails_throwsInternalServerErrorException() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        doNothing().when(validationService).validateEmailNotExists(registerRequest.email());
+        doNothing().when(validationService).validateEmailNotExists(userRequest.email());
         doNothing().when(validationService).validateNameNotExists(userRequest.name());
 
         doThrow(new RuntimeException("Email error")).when(emailService).sendEmail(anyString(), anyString(),

@@ -1,6 +1,7 @@
+app:
+  version: 0.0.1
 server:
   port: ${SERVER_PORT:2803}
-
 spring:
   application:
     name: api-rest-vm
@@ -14,7 +15,12 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/api-rest-vm
 jwt:
   secret: ${JWT_SECRET:f8ab5529f4c892c0dfcefeed9d165bc0}
   expirationTime: ${JWT_EXPIRATION_TIME:3600000}

@@ -1,5 +1,9 @@
 package com.api_rest_vm.dto;
 
-public record AuthResponse(String token, String role, Long id) {
+import io.swagger.v3.oas.annotations.media.Schema;
 
+public record AuthResponse(
+        @Schema(description = "Token de autenticação") String token,
+        @Schema(description = "O perfil ou papel do usuário autenticado") String role,
+        @Schema(description = "O identificador único do usuário autenticado no sistema") Long id) {
 }

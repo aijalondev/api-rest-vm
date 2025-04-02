@@ -31,9 +31,6 @@ public class SecurityConfig {
     private final AuthenticationFilter authenticationFilter;
     private final UserDetailsService userDetailsService;
 
-    @Value("${cors.allowed-origins}")
-    private String allowedOrigins;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())

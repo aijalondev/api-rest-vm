@@ -68,10 +68,8 @@ public class UserService {
 
         validationService.validateEmailNotExists(registerRequest.email());
 
-        Role role = Role.valueOf(registerRequest.role().toUpperCase());
-
         User user = new User(null, registerRequest.name(), registerRequest.email(),
-                passwordEncoder.encode(registerRequest.password()), role);
+                passwordEncoder.encode(registerRequest.password()), Role.valueOf(registerRequest.role().toUpperCase()));
         userRepository.save(user);
 
         try {
@@ -98,7 +96,7 @@ public class UserService {
                 existingUser.setEmail(userRequest.email());
             }
 
-            if (!userRequest.role().isBlank()) {
+            if (userRequest.role() != null) {
                 existingUser.setRole(Role.valueOf(userRequest.role().toUpperCase()));
             }
 
