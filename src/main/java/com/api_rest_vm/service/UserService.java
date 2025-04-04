@@ -96,7 +96,7 @@ public class UserService {
                 existingUser.setEmail(userRequest.email());
             }
 
-            if (userRequest.role() != null) {
+            if (!userRequest.role().isBlank()) {
                 existingUser.setRole(Role.valueOf(userRequest.role().toUpperCase()));
             }
 
